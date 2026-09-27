@@ -12,18 +12,18 @@ function infinito() {
     }
 
     //Crear variables
-    let pararBucle = true
+    let continuarBucle = true
     let cont = 0
     let numeroAMultiplicar = 0
     let resultado = 0
-    while (pararBucle) {
+    while (continuarBucle) {
         //Comprobar si es infinity para parar
         if (resultado === Infinity || resultado === -Infinity) {
             console.log(`El número de operaciones necesarias ha/n sido ${cont}`)
-            pararBucle = false
+            continuarBucle = false
         } else {
             //Si es la primera vuelta asignar num y sino resultado
-            cont === 0 ? numeroAMultiplicar = num : numeroAMultiplicar = resultado
+            numeroAMultiplicar = cont === 0 ? num : resultado
             //Hacer la multiplicación
             resultado = num * numeroAMultiplicar
             cont++
