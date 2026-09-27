@@ -1,8 +1,14 @@
 //Precio Menus
-const MENUDIA = 12.5
-const MENUPREMIUM = 17.45
-const MENUBUFFET = 23.85
-const MENUINFANTIL = 9.25
+const PRECIO_MENU_DIA = 12.5
+const PRECIO_MENU_PREMIUM = 17.45
+const PRECIO_MENU_BUFFET = 23.85
+const PRECIO_MENU_INFANTIL = 9.25
+const DESCUENTO = 0.15
+const MENU_DIA = "MENU_DIA"
+const MENU_PREMIUM = "MENU_PREMIUM"
+const MENU_BUFFET = "MENU_BUFFET"
+let menu_precios = []
+let menu_tipos = []
 
 function menu() {
     /*
@@ -26,18 +32,19 @@ function menu() {
 
     //Mostrar carta
     alert(`Estas son las opciones de menú para adultos... 
-    1.- Menú del día --> ${MENUDIA}€
-    2.- Menú del día PREMIUM --> ${MENUPREMIUM}€
-    3.- Menú Buffet Libre --> ${MENUBUFFET}€
+    1.- Menú del día --> ${PRECIO_MENU_DIA}€
+    2.- Menú del día PREMIUM --> ${PRECIO_MENU_PREMIUM}€
+    3.- Menú Buffet Libre --> ${PRECIO_MENU_BUFFET}€
     NOTA: Todos los precios son sin IVA`)
     let adultos = comensales - niños
     let elegidoDia = 0
     let elegidoPremium = 0
+
     //Preguntar por menus 
     restaMenus(elegidoDia, elegidoPremium, adultos)
-    elegidoDia = verificarNumero(undefined, "¿Cuántos comensales quieren el menú: \n 1.- Menú del día -->" + MENUDIA + "€ ")
+    elegidoDia = verificarNumero(undefined, "¿Cuántos comensales quieren el menú: \n 1.- Menú del día -->" + PRECIO_MENU_DIA + "€ ")
     restaMenus(elegidoDia, elegidoPremium, adultos)
-    elegidoPremium = verificarNumero(undefined, "¿Cuántos comensales quieren el menú: \n2.- Menú del día PREMIUM -->" + MENUPREMIUM + "€ ")
+    elegidoPremium = verificarNumero(undefined, "¿Cuántos comensales quieren el menú: \n2.- Menú del día PREMIUM -->" + PRECIO_MENU_PREMIUM + "€ ")
     let elegidoBuffet = adultos - elegidoDia - elegidoPremium
 
     //Mostrar elecciones
@@ -49,9 +56,40 @@ function menu() {
         ${niños} menú/s infantil/es`)
     //Mostrar avisos
     alert(`Debe saber que ${abuelitos} menú/s se benificiaran de un 15% de descuento, respecto al menú de adultos por ser mayores de 65 años \nNOTA: El descuento será aplicado a los menús más económicos`)
-    alert(`Los menús infantiles tienen un precio de ${MENUINFANTIL}€ + IVA \nEn su caso, se le aplicará este precio a ${niños} comensales`)
+    alert(`Los menús infantiles tienen un precio de ${PRECIO_MENU_INFANTIL}€ + IVA \nEn su caso, se le aplicará este precio a ${niños} comensales`)
 
+    añadirMenus(PRECIO_MENU_DIA, elegidoDia, MENU_DIA)
+    añadirMenus(PRECIO_MENU_PREMIUM, elegidoPremium, MENU_PREMIUM)
+    añadirMenus(PRECIO_MENU_BUFFET, elegidoBuffet, MENU_BUFFET)
 
+    for (let i = 0; i < abuelitos; i++) {
+        let descuento = menu_precios[i] * 0.15
+        menu_precios[i] = menu_precios[i] - descuento
+    }
+
+    let totalDia = calcularTotalPorTipo(MENU_DIA)
+    let totalPremium = calcularTotalPorTipo(MENU_PREMIUM)
+    let totalBuffet = calcularTotalPorTipo(MENU_BUFFET)
+    let total = totalDia + totalPremium + totalBuffet + (PRECIO_MENU_INFANTIL * niños)
+    let iva= total *0.1
+    alert(`Los menús que se servirán serán los siguientes:
+        ${elegidoDia} menú/s del día x ${PRECIO_MENU_DIA}€ ...${totalDia.toFixed(2)}
+        ${elegidoPremium} menú/s PREMIUM x ${PRECIO_MENU_PREMIUM}€ ...${totalPremium.toFixed(2)}
+        ${elegidoBuffet} menú/s Buffet x ${PRECIO_MENU_BUFFET}€ ...${totalBuffet.toFixed(2)}
+        ${niños} menú/s infantil x ${PRECIO_MENU_INFANTIL}€ ...${(PRECIO_MENU_INFANTIL * niños).toFixed(2)}
+        Total.......${total.toFixed(2)}
+        IVA.......${iva.toFixed(2)}
+        TOTAL IVA INCLUIDO.....${(total + iva).toPrecision(10)}`)
+}
+
+function calcularTotalPorTipo(tipo) {
+    let totalTipo = 0
+    for (let i = 0; i < menu_precios.length; i++) {
+        if (menu_tipos[i] === tipo) {
+            totalTipo += menu_precios[i]
+        }
+    }
+    return totalTipo
 }
 
 function restaMenus(elegidoDia, elegidoPremium, adultos) {
@@ -68,5 +106,15 @@ function verificarNumero(numero, mensaje) {
     }
     return numero
 }
+
+function añadirMenus(precio, cantidad, tipo) {
+    if (cantidad != 0) {
+        for (let i = 0; i < cantidad; i++) {
+            menu_precios[menu_precios.length] = precio
+            menu_tipos[menu_tipos.length] = tipo
+        }
+    }
+}
+
 
 menu()
